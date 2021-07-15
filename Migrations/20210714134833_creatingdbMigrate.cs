@@ -46,6 +46,7 @@ namespace StudentTeendanceBackend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    attendancesId = table.Column<int>(type: "int", nullable: false),
                     GivenTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StudentRoll = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },

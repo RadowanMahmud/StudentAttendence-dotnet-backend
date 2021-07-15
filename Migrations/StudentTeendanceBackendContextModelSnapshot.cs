@@ -94,6 +94,9 @@ namespace StudentTeendanceBackend.Migrations
                     b.Property<string>("StudentRoll")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("attendancesId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Record");

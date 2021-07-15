@@ -10,7 +10,7 @@ using StudentTeendanceBackend.Data;
 namespace StudentTeendanceBackend.Migrations
 {
     [DbContext(typeof(StudentTeendanceBackendContext))]
-    [Migration("20210711130518_creatingdbMigrate")]
+    [Migration("20210714134833_creatingdbMigrate")]
     partial class creatingdbMigrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,6 +95,9 @@ namespace StudentTeendanceBackend.Migrations
 
                     b.Property<string>("StudentRoll")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("attendancesId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

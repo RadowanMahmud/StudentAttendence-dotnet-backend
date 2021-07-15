@@ -12,6 +12,8 @@ namespace StudentTeendanceBackend.Model
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
+        public int attendancesId { get; set; }
         public DateTime GivenTime { get; set; }
         public string StudentRoll { get; set; }
     }
