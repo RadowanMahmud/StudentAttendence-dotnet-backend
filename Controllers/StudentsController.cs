@@ -80,12 +80,12 @@ namespace StudentTeendanceBackend.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Student>> PostStudent(Student student)
+        public IActionResult PostStudent(Student student)
         {
             _context.Student.Add(student);
-            await _context.SaveChangesAsync();
+            var result = _context.SaveChanges();
 
-            return CreatedAtAction("GetStudent", new { id = student.Id }, student);
+            return Ok(result);
         }
 
         // DELETE: api/Students/5
