@@ -82,6 +82,7 @@ namespace StudentTeendanceBackend.Controllers
         [HttpPost]
         public async Task<ActionResult<Record>> PostRecord(Record record)
         {
+            record.GivenTime = DateTime.Now;
             _context.Record.Add(record);
             await _context.SaveChangesAsync();
 
