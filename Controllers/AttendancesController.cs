@@ -40,6 +40,28 @@ namespace StudentTeendanceBackend.Controllers
             return Ok(listOfAttendence);
         }
 
+        [HttpGet("current/{id}")]
+        public IActionResult GetCurrentAttendanceById(int id)
+        {
+            var listOfAttendence = new List<MyAttendence>();
+            var date = DateTime.Now;
+            var results = _context.Attendance.Where(p => p.StartTime <= date && p.EndTime >= date).ToList();
+
+            foreach (var result in results)
+            {
+                var record = _context.Record.Where(p => p.StudentId == id && p.attendancesId == result.Id).Count();
+
+                if (record == 0) {
+                    var temp = new MyAttendence();
+                    temp.data = result;
+                    temp.admin = _context.Admin.Where(p => p.Id == result.AdminId).FirstOrDefault();
+
+                    listOfAttendence.Add(temp);
+                }
+            }
+            return Ok(listOfAttendence);
+        }
+
         // GET: api/Attendances/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Attendance>> GetAttendance(int id)

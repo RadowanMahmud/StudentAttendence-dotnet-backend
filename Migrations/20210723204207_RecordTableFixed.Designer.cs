@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentTeendanceBackend.Data;
 
 namespace StudentTeendanceBackend.Migrations
 {
     [DbContext(typeof(StudentTeendanceBackendContext))]
-    partial class StudentTeendanceBackendContextModelSnapshot : ModelSnapshot
+    [Migration("20210723204207_RecordTableFixed")]
+    partial class RecordTableFixed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
