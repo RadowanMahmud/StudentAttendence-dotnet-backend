@@ -27,7 +27,17 @@ namespace StudentTeendanceBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Attendance>>> GetAttendance()
         {
-            return await _context.Attendance.ToListAsync();
+            var listOfAttendence = new List<MyAttendence>();
+            var results = await _context.Attendance.ToListAsync();
+            foreach (var result in results)
+            {
+                var temp = new MyAttendence();
+                temp.data = result;
+                temp.admin = _context.Admin.Where(p => p.Id == result.AdminId).FirstOrDefault();
+
+                listOfAttendence.Add(temp);
+            }
+            return Ok(listOfAttendence);
         }
 
         // GET: api/Attendances/5
@@ -83,9 +93,9 @@ namespace StudentTeendanceBackend.Controllers
         public async Task<ActionResult<Attendance>> PostAttendance(Attendance attendance)
         {
             _context.Attendance.Add(attendance);
-            await _context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAttendance", new { id = attendance.Id }, attendance);
+            return Ok(result);
         }
 
         // DELETE: api/Attendances/5
@@ -108,5 +118,11 @@ namespace StudentTeendanceBackend.Controllers
         {
             return _context.Attendance.Any(e => e.Id == id);
         }
+    }
+
+    public class MyAttendence
+    {
+        public object data { get; set; }
+        public object admin { get; set; }
     }
 }

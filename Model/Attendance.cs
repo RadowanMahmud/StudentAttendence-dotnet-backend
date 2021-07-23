@@ -13,8 +13,8 @@ namespace StudentTeendanceBackend.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string AdminId { get; set; }
-        public DateTime Date { get; set; }
+        public int AdminId { get; set; }
+        public string Title { get; set; }
         public DateTime StartTime  { get; set; }
         public DateTime EndTime { get; set; }
     }
