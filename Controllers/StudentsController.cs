@@ -73,7 +73,7 @@ namespace StudentTeendanceBackend.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok(student);
         }
 
         // POST: api/Students

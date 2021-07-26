@@ -109,5 +109,64 @@ namespace StudentTeendanceBackend.Controllers
         {
             return _context.Record.Any(e => e.Id == id);
         }
+
+        [HttpGet("reports/daily/{studentId}")]
+        public async Task<ActionResult<IEnumerable<Record>>> GetDailyRecordByStudentId(int studentId)
+        {
+            var query = DateTime.Now;
+
+            var records = await _context.Record
+                .Where(a => a.GivenTime.Day == query.Day && a.GivenTime.Month == query.Month && a.GivenTime.Year == query.Year && a.StudentId == studentId).ToListAsync();
+
+            var listofMyrecords = new List<MyRecord>();
+            
+            foreach (var record in records)
+            {
+                var temp = new MyRecord();
+                temp.record = record;
+                var attendence = _context.Attendance.Where(p => p.Id == record.attendancesId).FirstOrDefault();
+                temp.attendence = attendence;
+                temp.admin = _context.Admin.Where(p => p.Id == attendence.AdminId).FirstOrDefault();
+
+                listofMyrecords.Add(temp);
+                
+            }
+
+            return Ok(listofMyrecords);
+        }
+
+        [HttpGet("reports/monthly/{month}/{studentId}")]
+        public async Task<ActionResult<IEnumerable<Record>>> GetMonthlyRecordByStudentId(string month,int studentId)
+        {
+            var query = DateTime.Parse(month);
+
+            var records = await _context.Record
+                .Where(a => a.GivenTime.Month == query.Month && a.GivenTime.Year == query.Year && a.StudentId == studentId).ToListAsync();
+
+            var listofMyrecords = new List<MyRecord>();
+
+            foreach (var record in records)
+            {
+                var temp = new MyRecord();
+                temp.record = record;
+                var attendence = _context.Attendance.Where(p => p.Id == record.attendancesId).FirstOrDefault();
+                temp.attendence = attendence;
+                temp.admin = _context.Admin.Where(p => p.Id == attendence.AdminId).FirstOrDefault();
+
+                listofMyrecords.Add(temp);
+
+            }
+
+            return Ok(listofMyrecords);
+        }
+
+
+    }
+
+    public class MyRecord
+    {
+        public object record { get; set; }
+        public object attendence { get; set; }
+        public object admin { get; set; }
     }
 }
