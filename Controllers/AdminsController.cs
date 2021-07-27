@@ -43,6 +43,25 @@ namespace StudentTeendanceBackend.Controllers
             return Ok(admin);
         }
 
+        [HttpPut("{id}")]
+        public IActionResult PutAdmin(int id, Admin admin)
+        {
+            if (id != admin.Id)
+            {
+                return BadRequest();
+            }
+
+            var result = _adminRepository.editAdmin(id, admin);
+
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(admin);
+        }
+
 
         // POST: api/Admins  
         [HttpPost("register")]
