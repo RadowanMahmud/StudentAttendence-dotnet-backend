@@ -69,6 +69,16 @@ namespace StudentTeendanceBackend.Repository
             }
 
             dbcontext.Student.Remove(student);
+
+            var records = dbcontext.Record.Where(p => p.StudentId == id).ToList();
+
+            foreach (var record in records)
+            {
+                // var record = dbcontext.Record.Find(id);
+
+                dbcontext.Record.Remove(record);
+            }
+
             dbcontext.SaveChangesAsync();
 
             return student;
