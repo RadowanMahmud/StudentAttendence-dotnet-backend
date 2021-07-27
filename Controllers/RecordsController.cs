@@ -45,11 +45,11 @@ namespace StudentTeendanceBackend.Controllers
 
     
         [HttpPost]
-        public  Task<ActionResult<Record>> PostRecord(Record recordreq)
+        public  IActionResult PostRecord(Record recordreq)
         {
             var record = _context.addRecord(recordreq);
 
-            return CreatedAtAction("GetRecord", new { id = record.Id }, record);
+            return Ok(record);
         }
 
         // DELETE: api/Records/5

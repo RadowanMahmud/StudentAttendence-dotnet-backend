@@ -36,7 +36,7 @@ namespace StudentTeendanceBackend.Controllers
 
         // PUT: api/Attendances/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAttendance(int id, Attendance attendance)
+        public IActionResult PutAttendance(int id, Attendance attendance)
         {
             if (id != attendance.Id)
             {
@@ -50,10 +50,10 @@ namespace StudentTeendanceBackend.Controllers
 
         // POST: api/Attendances
         [HttpPost]
-        public async Task<ActionResult<Attendance>> PostAttendance(Attendance attendance)
+        public IActionResult PostAttendance(Attendance attendance)
         {
          
-            var result = await _context.addAttendence(attendance);
+            var result =  _context.addAttendence(attendance);
             return Ok(result);
         }
 
