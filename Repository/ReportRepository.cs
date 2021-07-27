@@ -37,6 +37,9 @@ namespace StudentTeendanceBackend.Repository
                 return null;
             }
 
+            dbcontext.Record.Remove(record);
+            dbcontext.SaveChangesAsync();
+
             return record;
         }
 

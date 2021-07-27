@@ -9,6 +9,8 @@ namespace StudentTeendanceBackend.Repository
 {
     public class AttendenceRepository: DatabaseRepository
     {
+        public readonly ReportRepository _context = new ReportRepository();
+
         public List<MyAttendence> getAttendences() 
         {
             var listOfAttendence = new List<MyAttendence>();
@@ -86,7 +88,16 @@ namespace StudentTeendanceBackend.Repository
                 return null;
             }
 
+            var records = dbcontext.Record.Where(p => p.attendancesId == id).ToList();
             dbcontext.Attendance.Remove(attendance);
+
+            foreach (var record in records)
+            {
+                // var record = dbcontext.Record.Find(id);
+
+                dbcontext.Record.Remove(record);
+            }
+
             dbcontext.SaveChangesAsync();
 
             return attendance;
