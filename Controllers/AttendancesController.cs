@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentTeendanceBackend.Data;
 using StudentTeendanceBackend.Model;
+using StudentTeendanceBackend.Repository;
 
 namespace StudentTeendanceBackend.Controllers
 {
@@ -16,69 +17,24 @@ namespace StudentTeendanceBackend.Controllers
     [ApiController]
     public class AttendancesController : ControllerBase
     {
-        private readonly StudentTeendanceBackendContext _context;
-
-        public AttendancesController(StudentTeendanceBackendContext context)
-        {
-            _context = context;
-        }
+        public readonly AttendenceRepository _context = new AttendenceRepository();
 
         // GET: api/Attendances
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAttendance()
+        public IActionResult GetAttendance()
         {
-            var listOfAttendence = new List<MyAttendence>();
-            var results = await _context.Attendance.ToListAsync();
-            foreach (var result in results)
-            {
-                var temp = new MyAttendence();
-                temp.data = result;
-                temp.admin = _context.Admin.Where(p => p.Id == result.AdminId).FirstOrDefault();
-
-                listOfAttendence.Add(temp);
-            }
+            var listOfAttendence = _context.getAttendences();
             return Ok(listOfAttendence);
         }
 
         [HttpGet("current/{id}")]
         public IActionResult GetCurrentAttendanceById(int id)
         {
-            var listOfAttendence = new List<MyAttendence>();
-            var date = DateTime.Now;
-            var results = _context.Attendance.Where(p => p.StartTime <= date && p.EndTime >= date).ToList();
-
-            foreach (var result in results)
-            {
-                var record = _context.Record.Where(p => p.StudentId == id && p.attendancesId == result.Id).Count();
-
-                if (record == 0) {
-                    var temp = new MyAttendence();
-                    temp.data = result;
-                    temp.admin = _context.Admin.Where(p => p.Id == result.AdminId).FirstOrDefault();
-
-                    listOfAttendence.Add(temp);
-                }
-            }
+            var listOfAttendence = _context.getCurrentAttendanceById(id);
             return Ok(listOfAttendence);
         }
 
-        // GET: api/Attendances/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Attendance>> GetAttendance(int id)
-        {
-            var attendance = await _context.Attendance.FindAsync(id);
-
-            if (attendance == null)
-            {
-                return NotFound();
-            }
-
-            return attendance;
-        }
-
         // PUT: api/Attendances/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAttendance(int id, Attendance attendance)
         {
@@ -87,58 +43,27 @@ namespace StudentTeendanceBackend.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(attendance).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AttendanceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var result = _context.editAttendence(id, attendance);
 
             return NoContent();
         }
 
         // POST: api/Attendances
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Attendance>> PostAttendance(Attendance attendance)
         {
-            _context.Attendance.Add(attendance);
-            var result = await _context.SaveChangesAsync();
-
+         
+            var result = await _context.addAttendence(attendance);
             return Ok(result);
         }
 
         // DELETE: api/Attendances/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Attendance>> DeleteAttendance(int id)
+        public IActionResult DeleteAttendance(int id)
         {
-            var attendance = await _context.Attendance.FindAsync(id);
-            if (attendance == null)
-            {
-                return NotFound();
-            }
+            var attendance = _context.deleteAttendence(id);
 
-            _context.Attendance.Remove(attendance);
-            await _context.SaveChangesAsync();
-
-            return attendance;
-        }
-
-        private bool AttendanceExists(int id)
-        {
-            return _context.Attendance.Any(e => e.Id == id);
+            return Ok(attendance);
         }
     }
 

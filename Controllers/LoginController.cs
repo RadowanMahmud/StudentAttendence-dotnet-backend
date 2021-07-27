@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentTeendanceBackend.ViewModel;
 using StudentTeendanceBackend.Data;
 using StudentTeendanceBackend.Model;
+using StudentTeendanceBackend.Repository;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,12 +20,14 @@ namespace StudentTeendanceBackend.Controllers
     {
 
         private readonly IJwtAuthManager jwtAuthManager;
-        private readonly StudentTeendanceBackendContext _context;
+        public readonly AdminRepository _adminRepository = new AdminRepository();
+        public readonly StudentRepository _studentRepository = new StudentRepository();
 
-        public LoginController(IJwtAuthManager jwtAuth, StudentTeendanceBackendContext context)
+
+
+        public LoginController(IJwtAuthManager jwtAuth)
         {
             this.jwtAuthManager = jwtAuth;
-            _context = context;
         }
 
         [AllowAnonymous]
@@ -32,7 +35,7 @@ namespace StudentTeendanceBackend.Controllers
         public IActionResult Authenticate([FromBody] UserLogin userLogin)
         {
             if (userLogin.role == "admin") {
-                var entity = _context.Admin.Where(p => p.Email == userLogin.email && p.Password == userLogin.password).FirstOrDefault();
+                var entity = _adminRepository.login(userLogin);
                 if (entity != null)
                 {
                     var token = jwtAuthManager.Authenticate(userLogin.email, userLogin.password);
@@ -49,7 +52,7 @@ namespace StudentTeendanceBackend.Controllers
                 return Unauthorized();
             }
             else if (userLogin.role == "student") {
-                var entity = _context.Student.Where(p => p.Email == userLogin.email && p.Password == userLogin.password).FirstOrDefault();
+                var entity = _studentRepository.login(userLogin);
                 if (entity != null)
                 {
                     var token = jwtAuthManager.Authenticate(userLogin.email, userLogin.password);

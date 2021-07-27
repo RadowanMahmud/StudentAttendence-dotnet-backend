@@ -51,8 +51,9 @@ namespace StudentTeendanceBackend
 
             services.AddSingleton<IJwtAuthManager>(new JwtAuth(key));
 
-            services.AddDbContext<StudentTeendanceBackendContext>(options =>
-                       options.UseSqlServer(Configuration.GetConnectionString("StudentTeendanceBackendContext")));
+
+            //services.AddDbContext<StudentTeendanceBackendContext>(options =>
+              //         options.UseSqlServer(Configuration.GetConnectionString("StudentTeendanceBackendContext")));
 
         }
 

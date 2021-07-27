@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentTeendanceBackend.Data;
 using StudentTeendanceBackend.Model;
+using StudentTeendanceBackend.Repository;
 
 namespace StudentTeendanceBackend.Controllers
 {
@@ -16,32 +17,30 @@ namespace StudentTeendanceBackend.Controllers
     [ApiController]
     public class AdminsController : ControllerBase
     {
-        private readonly StudentTeendanceBackendContext _context;
+ 
+        public readonly AdminRepository _adminRepository = new AdminRepository();
 
-        public AdminsController(StudentTeendanceBackendContext context)
-        {
-            _context = context;
-        }
 
-        // GET: api/Admins
+        // GET: api/admins
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Admin>>> GetAdmin()
+        public IActionResult GetAdmin()
         {
-            return await _context.Admin.ToListAsync();
+            var admins = _adminRepository.getAllAdmins();
+
+            return Ok(admins);
         }
 
-        // GET: api/Admins/5
+        // GET: api/admins/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Admin>> GetAdmin(int id)
+        public IActionResult GetAdminById(int id)
         {
-            var admin = await _context.Admin.FindAsync(id);
+            var admin = _adminRepository.getAdminById(id);
 
             if (admin == null)
             {
                 return NotFound();
             }
-
-            return admin;
+            return Ok(admin);
         }
 
 
@@ -49,24 +48,20 @@ namespace StudentTeendanceBackend.Controllers
         [HttpPost("register")]
         public IActionResult PostAdmin(Admin admin)
         {
-            _context.Admin.Add(admin);
-            var result = _context.SaveChanges();
+           var result = _adminRepository.addAdmin(admin);
 
             return Ok(result);
         }
 
         // DELETE: api/Admins/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Admin>> DeleteAdmin(int id)
+        public IActionResult DeleteAdmin(int id)
         {
-            var admin = await _context.Admin.FindAsync(id);
-            if (admin == null)
+            var admin = _adminRepository.deleteAdmin(id);
+            if(admin == null)
             {
                 return NotFound();
             }
-
-            _context.Admin.Remove(admin);
-            await _context.SaveChangesAsync();
 
             return admin;
         }

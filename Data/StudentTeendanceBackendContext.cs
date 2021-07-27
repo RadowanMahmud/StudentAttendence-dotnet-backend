@@ -9,10 +9,16 @@ namespace StudentTeendanceBackend.Data
 {
     public class StudentTeendanceBackendContext : DbContext
     {
-        public StudentTeendanceBackendContext (DbContextOptions<StudentTeendanceBackendContext> options)
-            : base(options)
-        {
-        }
+       // public StudentTeendanceBackendContext (DbContextOptions<StudentTeendanceBackendContext> options)
+         //   : base(options)
+        //{
+        //}
+
+        //public StudentTeendanceBackendContext()
+        //{
+       // }
+
+        public const string StudentAttendenceDbConnectionString = "Server=DESKTOP-4T2TUQK;Database=StudentTeendanceBackendContext;Trusted_Connection=True;MultipleActiveResultSets=true";
 
         public DbSet<Student> Student { get; set; }
 
@@ -22,7 +28,10 @@ namespace StudentTeendanceBackend.Data
 
         public DbSet<StudentTeendanceBackend.Model.Record> Record { get; set; }
 
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(StudentAttendenceDbConnectionString);
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

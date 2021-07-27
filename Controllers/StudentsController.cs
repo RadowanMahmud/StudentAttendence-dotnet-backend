@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentTeendanceBackend.Data;
 using StudentTeendanceBackend.Model;
+using StudentTeendanceBackend.Repository;
 
 namespace StudentTeendanceBackend.Controllers
 {
@@ -16,97 +17,72 @@ namespace StudentTeendanceBackend.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        private readonly StudentTeendanceBackendContext _context;
-
-        public StudentsController(StudentTeendanceBackendContext context)
-        {
-            _context = context;
-        }
+        public readonly StudentRepository _context = new StudentRepository();
 
         // GET: api/Students
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudent()
+        public IActionResult GetStudent()
         {
-            return await _context.Student.ToListAsync();
+            var result = _context.getAllStudents();
+            return Ok(result);
         }
 
         // GET: api/Students/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public IActionResult GetStudent(int id)
         {
-            var student = await _context.Student.FindAsync(id);
+            var student =  _context.getStudentsById(id);
 
             if (student == null)
             {
                 return NotFound();
             }
 
-            return student;
+            return Ok(student);
         }
 
         // PUT: api/Students/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudent(int id, Student student)
+        public IActionResult PutStudent(int id, Student student)
         {
             if (id != student.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(student).State = EntityState.Modified;
+            var result = _context.editStudent(id, student);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StudentExists(id))
+          
+                if (result == null)
                 {
                     return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                }          
 
             return Ok(student);
         }
 
         // POST: api/Students
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public IActionResult PostStudent(Student student)
         {
-            _context.Student.Add(student);
-            var result = _context.SaveChanges();
+            var result = _context.addStudent(student);
 
             return Ok(result);
         }
 
         // DELETE: api/Students/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Student>> DeleteStudent(int id)
+        public IActionResult DeleteStudent(int id)
         {
-            var student = await _context.Student.FindAsync(id);
+            var student = _context.deleteStudent(id);
             if (student == null)
             {
                 return NotFound();
             }
 
-            _context.Student.Remove(student);
-            await _context.SaveChangesAsync();
-
-            return student;
+            return Ok(student);
         }
 
-        private bool StudentExists(int id)
-        {
-            return _context.Student.Any(e => e.Id == id);
-        }
+      
     }
 }
