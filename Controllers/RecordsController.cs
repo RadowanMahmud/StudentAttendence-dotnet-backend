@@ -120,6 +120,13 @@ namespace StudentTeendanceBackend.Controllers
             return Ok(result);
         }
 
+        [HttpGet("reports/customized/{startDate}/{endDate}/{studentId}")]
+        public IActionResult GetCustomizedReportStudent(string startDate, string endDate, int studentId)
+        {
+            var result = _context.getCustomizedReport(startDate, endDate, studentId);
+            return Ok(result);
+        }
+
     }
 
 }
