@@ -207,6 +207,36 @@ namespace StudentTeendanceBackend.Repository
             return listofMyrecords;
         }
 
+
+        public List<MyAdminRecord> getCustomizedReportForAdmin(string startTime,string endTime,int adminId)
+        {
+            DateTime currentWeekStartDate = DateTime.Parse(startTime);
+            DateTime currentWeekEndDate = DateTime.Parse(endTime);
+
+
+            var records = dbcontext.Record
+                .Where(a => a.GivenTime.Date >= currentWeekStartDate.Date && a.GivenTime.Date <= currentWeekEndDate.Date).ToList();
+
+            var listofMyrecords = new List<MyAdminRecord>();
+
+            foreach (var record in records)
+            {
+                var temp = new MyAdminRecord();
+                temp.record = record;
+                var attendencecount = dbcontext.Attendance.Where(p => p.Id == record.attendancesId && p.AdminId == adminId).Count();
+                if (attendencecount > 0)
+                {
+                    var attendence = dbcontext.Attendance.Where(p => p.Id == record.attendancesId && p.AdminId == adminId).FirstOrDefault();
+                    temp.attendence = attendence;
+                    temp.student = dbcontext.Student.Where(p => p.Id == record.StudentId).FirstOrDefault();
+
+                    listofMyrecords.Add(temp);
+                }
+
+            }
+            return listofMyrecords;
+        }
+
         private bool RecordExists(int id)
         {
             return dbcontext.Record.Any(e => e.Id == id);
