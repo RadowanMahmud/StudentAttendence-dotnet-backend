@@ -23,6 +23,7 @@ namespace StudentTeendanceBackend.Repository
 
         public dynamic addRecord(Record record)
         {
+            record.GivenTime = DateTime.Now;
             dbcontext.Record.Add(record);
             var result = dbcontext.SaveChanges();
 
@@ -61,6 +62,61 @@ namespace StudentTeendanceBackend.Repository
                 temp.admin = dbcontext.Admin.Where(p => p.Id == attendence.AdminId).FirstOrDefault();
 
                 listofMyrecords.Add(temp);
+
+            }
+
+            return listofMyrecords;
+        }
+
+
+        public List<MyAdminRecord> getDailyReportForAdmin(int adminId)
+        {
+            var query = DateTime.Now;
+
+            var records = dbcontext.Record
+                .Where(a => a.GivenTime.Day == query.Day && a.GivenTime.Month == query.Month && a.GivenTime.Year == query.Year).ToList();
+
+            var listofMyrecords = new List<MyAdminRecord>();
+
+            foreach (var record in records)
+            {
+                var temp = new MyAdminRecord();
+                temp.record = record;
+                var attendencecount = dbcontext.Attendance.Where(p => p.Id == record.attendancesId && p.AdminId == adminId).Count();
+                if (attendencecount > 0) {
+                    var attendence = dbcontext.Attendance.Where(p => p.Id == record.attendancesId && p.AdminId == adminId).FirstOrDefault();
+                    temp.attendence = attendence;
+                    temp.student = dbcontext.Student.Where(p => p.Id == record.StudentId).FirstOrDefault();
+
+                    listofMyrecords.Add(temp);
+                }
+            }
+
+            return listofMyrecords;
+        }
+
+        public List<MyAdminRecord> getMonthlyReportAdmin(string month, int adminId)
+        {
+            var query = DateTime.Parse(month);
+
+            var records = dbcontext.Record
+                .Where(a => a.GivenTime.Month == query.Month && a.GivenTime.Year == query.Year).ToList();
+
+            var listofMyrecords = new List<MyAdminRecord>();
+
+            foreach (var record in records)
+            {
+                var temp = new MyAdminRecord();
+                temp.record = record;
+                var attendencecount = dbcontext.Attendance.Where(p => p.Id == record.attendancesId && p.AdminId == adminId).Count();
+                if (attendencecount > 0)
+                {
+                    var attendence = dbcontext.Attendance.Where(p => p.Id == record.attendancesId && p.AdminId == adminId).FirstOrDefault();
+                    temp.attendence = attendence;
+                    temp.student = dbcontext.Student.Where(p => p.Id == record.StudentId).FirstOrDefault();
+
+                    listofMyrecords.Add(temp);
+                }
 
             }
 
@@ -119,6 +175,38 @@ namespace StudentTeendanceBackend.Repository
             return listofMyrecords;
         }
 
+        public List<MyAdminRecord> getWeeklyReportForAdmin(int adminId)
+        {
+            DayOfWeek currentDay = DateTime.Now.DayOfWeek;
+            int daysTillCurrentDay = currentDay - DayOfWeek.Sunday;
+            int daysFromCurrentDay = DayOfWeek.Saturday - currentDay;
+            DateTime currentWeekStartDate = DateTime.Now.AddDays(-daysTillCurrentDay);
+            DateTime currentWeekEndDate = DateTime.Now.AddDays(daysFromCurrentDay);
+
+
+            var records = dbcontext.Record
+                .Where(a => a.GivenTime.Date >= currentWeekStartDate.Date && a.GivenTime.Date <= currentWeekEndDate.Date).ToList();
+
+            var listofMyrecords = new List<MyAdminRecord>();
+
+            foreach (var record in records)
+            {
+                var temp = new MyAdminRecord();
+                temp.record = record;
+                var attendencecount = dbcontext.Attendance.Where(p => p.Id == record.attendancesId && p.AdminId == adminId).Count();
+                if (attendencecount > 0)
+                {
+                    var attendence = dbcontext.Attendance.Where(p => p.Id == record.attendancesId && p.AdminId == adminId).FirstOrDefault();
+                    temp.attendence = attendence;
+                    temp.student = dbcontext.Student.Where(p => p.Id == record.StudentId).FirstOrDefault();
+
+                    listofMyrecords.Add(temp);
+                }
+
+            }
+            return listofMyrecords;
+        }
+
         private bool RecordExists(int id)
         {
             return dbcontext.Record.Any(e => e.Id == id);
@@ -131,5 +219,12 @@ namespace StudentTeendanceBackend.Repository
         public object record { get; set; }
         public object attendence { get; set; }
         public object admin { get; set; }
+    }
+
+    public class MyAdminRecord
+    {
+        public object record { get; set; }
+        public object attendence { get; set; }
+        public object student { get; set; }
     }
 }

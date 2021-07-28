@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StudentTeendanceBackend.Migrations
 {
-    public partial class creatingdbMigrate : Migration
+    public partial class StartMigrate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,8 +30,8 @@ namespace StudentTeendanceBackend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AdminId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AdminId = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -48,7 +48,7 @@ namespace StudentTeendanceBackend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     attendancesId = table.Column<int>(type: "int", nullable: false),
                     GivenTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StudentRoll = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    StudentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

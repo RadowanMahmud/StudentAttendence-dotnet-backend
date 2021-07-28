@@ -10,8 +10,8 @@ using StudentTeendanceBackend.Data;
 namespace StudentTeendanceBackend.Migrations
 {
     [DbContext(typeof(StudentTeendanceBackendContext))]
-    [Migration("20210723204207_RecordTableFixed")]
-    partial class RecordTableFixed
+    [Migration("20210728073305_StartMigrate")]
+    partial class StartMigrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -74,10 +74,26 @@ namespace StudentTeendanceBackend.Controllers
             return Ok(listofMyrecords);
         }
 
+        [HttpGet("admin/reports/daily/{adminId}")]
+        public IActionResult GetDailyReporyAdmin(int adminId)
+        {
+
+            var listofMyrecords = _context.getDailyReportForAdmin(adminId);
+
+            return Ok(listofMyrecords);
+        }
+
         [HttpGet("reports/monthly/{month}/{studentId}")]
         public IActionResult GetMonthlyRecordByStudentId(string month,int studentId)
         {
             var listofMyrecords = _context.getMonthlyReport(month,studentId);
+            return Ok(listofMyrecords);
+        }
+
+        [HttpGet("admin/reports/monthly/{month}/{adminId}")]
+        public IActionResult GetMonthlyRecordByAdmin(string month, int adminId)
+        {
+            var listofMyrecords = _context.getMonthlyReportAdmin(month, adminId);
             return Ok(listofMyrecords);
         }
 
@@ -86,6 +102,14 @@ namespace StudentTeendanceBackend.Controllers
         {
             
             var listofMyrecords = _context.getWeeklyReport(studentId);
+            return Ok(listofMyrecords);
+        }
+
+        [HttpGet("admin/reports/weekly/{adminId}")]
+        public IActionResult GetWeeklyReportAdmin(int adminId)
+        {
+
+            var listofMyrecords = _context.getWeeklyReportForAdmin(adminId);
             return Ok(listofMyrecords);
         }
 
